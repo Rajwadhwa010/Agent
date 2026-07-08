@@ -1,5 +1,5 @@
-import { useState, useRef } from "react";
-import { Search as SearchIcon } from "lucide-react";
+import { useState, useRef, useEffect } from "react";
+import { Search as SearchIcon, ArrowRight } from "lucide-react";
 import api from "../services/api";
 import AnalysisCard from "./AnalysisCard";
 import AgentSteps from "./AgentSteps";
@@ -11,15 +11,45 @@ const EXAMPLE_COMPANIES = [
     { description: "NVIDIA Corp", symbol: "NVDA" },
 ];
 
+const RECENT_KEY = "alpha_research_recent_searches";
+const MAX_RECENT = 5;
+
+const getRecentSearches = () => {
+    try {
+        const raw = localStorage.getItem(RECENT_KEY);
+        return raw ? JSON.parse(raw) : [];
+    } catch {
+        return [];
+    }
+};
+
+const saveRecentSearch = (item) => {
+    try {
+        const existing = getRecentSearches().filter(
+            (r) => r.symbol !== item.symbol
+        );
+        const updated = [item, ...existing].slice(0, MAX_RECENT);
+        localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
+        return updated;
+    } catch {
+        return getRecentSearches();
+    }
+};
+
 const SearchBar = () => {
 
     const [company, setCompany] = useState("");
     const [companies, setCompanies] = useState([]);
     const [analysis, setAnalysis] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [recentSearches, setRecentSearches] = useState([]);
 
     const debounceRef = useRef(null);
     const resultsRef = useRef(null);
+
+    useEffect(() => {
+        setRecentSearches(getRecentSearches());
+    }, []);
 
     const handleSearch = (value) => {
 
@@ -55,7 +85,6 @@ const SearchBar = () => {
     };
 
     const scrollToResults = () => {
-        // Wait a tick so the loading/result section has rendered before scrolling
         setTimeout(() => {
             resultsRef.current?.scrollIntoView({
                 behavior: "smooth",
@@ -81,6 +110,7 @@ const SearchBar = () => {
 
             setCompany(selectedCompany.description);
             setCompanies([]);
+            setRecentSearches(saveRecentSearch(selectedCompany));
 
         } catch (error) {
 
@@ -94,44 +124,88 @@ const SearchBar = () => {
 
     };
 
+    // Enter key or the Analyze button both act on the top matching result
+    const handleAnalyzeClick = () => {
+        if (companies.length > 0) {
+            handleAnalyze(companies[0]);
+        }
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === "Enter") {
+            handleAnalyzeClick();
+        }
+    };
+
     const showEmptyState = !loading && !analysis && companies.length === 0;
 
     return (
 
         <div className="w-full">
 
-            <div className="relative max-w-3xl">
+            <div className="flex items-stretch gap-3 max-w-3xl">
 
-                <SearchIcon
-                    size={20}
-                    className="absolute left-5 top-1/2 -translate-y-1/2 text-[#8A93A2]"
-                />
+                <div className="relative flex-1">
 
-                <input
-                    type="text"
-                    placeholder="Search a company, e.g. Apple, Tesla, Microsoft..."
-                    value={company}
-                    onChange={(e) => handleSearch(e.target.value)}
+                    <SearchIcon
+                        size={20}
+                        className="absolute left-5 top-1/2 -translate-y-1/2 text-[#8A93A2]"
+                    />
+
+                    <input
+                        type="text"
+                        placeholder="Search by company name or ticker..."
+                        value={company}
+                        onChange={(e) => handleSearch(e.target.value)}
+                        onKeyDown={handleKeyDown}
+                        className="
+                            w-full
+                            rounded-2xl
+                            border
+                            border-[#E5E8EC]
+                            bg-white
+                            pl-14
+                            pr-5
+                            py-4
+                            text-[#10151C]
+                            text-base
+                            shadow-sm
+                            outline-none
+                            transition
+                            focus:border-[#3654F0]
+                            focus:ring-4
+                            focus:ring-[#3654F0]/10
+                            placeholder:text-[#8A93A2]
+                        "
+                    />
+
+                </div>
+
+                <button
+                    onClick={handleAnalyzeClick}
+                    disabled={companies.length === 0}
                     className="
-                        w-full
+                        flex
+                        items-center
+                        gap-2
+                        px-6
                         rounded-2xl
-                        border
-                        border-[#E5E8EC]
-                        bg-white
-                        pl-14
-                        pr-5
-                        py-4
-                        text-[#10151C]
-                        text-base
-                        shadow-sm
-                        outline-none
+                        font-semibold
+                        text-sm
+                        shrink-0
                         transition
-                        focus:border-[#3654F0]
-                        focus:ring-4
-                        focus:ring-[#3654F0]/10
-                        placeholder:text-[#8A93A2]
+                        disabled:bg-[#F6F7F9]
+                        disabled:text-[#C5CAD3]
+                        disabled:cursor-not-allowed
+                        bg-[#3654F0]
+                        text-white
+                        hover:bg-[#2A44D6]
+                        shadow-sm
                     "
-                />
+                >
+                    Analyze
+                    <ArrowRight size={16} />
+                </button>
 
             </div>
 
@@ -181,10 +255,10 @@ const SearchBar = () => {
                 <div className="mt-6 max-w-3xl flex flex-wrap items-center gap-2">
 
                     <span className="text-xs text-[#8A93A2] mr-1">
-                        Try:
+                        {recentSearches.length > 0 ? "Recent:" : "Try:"}
                     </span>
 
-                    {EXAMPLE_COMPANIES.map((item) => (
+                    {(recentSearches.length > 0 ? recentSearches : EXAMPLE_COMPANIES).map((item) => (
                         <button
                             key={item.symbol}
                             onClick={() => handleAnalyze(item)}
@@ -210,7 +284,6 @@ const SearchBar = () => {
 
             )}
 
-            {/* Anchor point: scrolled into view as soon as a company is clicked */}
             <div ref={resultsRef} className="scroll-mt-8">
                 <AgentSteps active={loading} />
                 <AnalysisCard analysis={analysis} />
