@@ -9,9 +9,12 @@ export const analyzeInvestment = async (company, symbol) => {
             symbol,
         });
 
-        // The graph's final state holds everything each node produced;
-        // we only need the "analysis" node's output here.
-        return result.analysis;
+        // Merge the AI verdict with the raw news list from research,
+        // so the frontend gets everything in one object (same as before).
+        return {
+            ...result.analysis,
+            news: result.research?.news || [],
+        };
 
     } catch (error) {
 
