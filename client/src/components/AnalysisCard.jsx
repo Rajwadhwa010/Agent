@@ -2,13 +2,14 @@ import { TrendingUp, TrendingDown, Rocket, ShieldAlert } from "lucide-react";
 import ScoreCard from "./ScoreCard";
 import SWOTCard from "./SWOTCard";
 import VerdictStamp from "./VerdictStamp";
+import NewsCard from "./NewsCard";
 
 const AnalysisCard = ({ analysis }) => {
 
     if (!analysis) return null;
 
     return (
-        <div className="mt-10 bg-white border border-[#E5E8EC] rounded-3xl p-8 md:p-10 shadow-sm">
+        <div className="mt-10 bg-white border border-[#E5E8EC] rounded-3xl p-8 md:p-10 shadow-sm fade-in-up">
 
             {/* Company Information + Verdict */}
             <div className="flex flex-wrap items-start justify-between gap-4">
@@ -28,7 +29,7 @@ const AnalysisCard = ({ analysis }) => {
             </div>
 
             {/* Score Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
 
                 <ScoreCard
                     title="Investment Score"
@@ -40,6 +41,12 @@ const AnalysisCard = ({ analysis }) => {
                     title="Risk Score"
                     value={`${analysis.riskScore}/100`}
                     color="#DB8A1B"
+                />
+
+                <ScoreCard
+                    title="AI Confidence"
+                    value={`${analysis.confidence}/100`}
+                    color="#0E9F6E"
                 />
 
             </div>
@@ -94,6 +101,9 @@ const AnalysisCard = ({ analysis }) => {
                 />
 
             </div>
+
+            {/* News */}
+            <NewsCard news={analysis.news} />
 
         </div>
     );
