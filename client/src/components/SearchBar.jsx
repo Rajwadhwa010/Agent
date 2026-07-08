@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { Search as SearchIcon } from "lucide-react";
 import api from "../services/api";
 import AnalysisCard from "./AnalysisCard";
-import Loading from "./Loading";
+import AgentSteps from "./AgentSteps";
 
 const EXAMPLE_COMPANIES = [
     { description: "Apple Inc", symbol: "AAPL" },
@@ -164,7 +164,6 @@ const SearchBar = () => {
 
             )}
 
-            {/* Empty state: quick example chips to try instantly */}
             {showEmptyState && (
 
                 <div className="mt-6 flex flex-wrap items-center gap-2">
@@ -199,7 +198,7 @@ const SearchBar = () => {
 
             )}
 
-            {loading && <Loading />}
+            <AgentSteps active={loading} />
 
             <AnalysisCard analysis={analysis} />
 
