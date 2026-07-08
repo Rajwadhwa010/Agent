@@ -19,6 +19,7 @@ const SearchBar = () => {
     const [loading, setLoading] = useState(false);
 
     const debounceRef = useRef(null);
+    const resultsRef = useRef(null);
 
     const handleSearch = (value) => {
 
@@ -53,10 +54,21 @@ const SearchBar = () => {
 
     };
 
+    const scrollToResults = () => {
+        // Wait a tick so the loading/result section has rendered before scrolling
+        setTimeout(() => {
+            resultsRef.current?.scrollIntoView({
+                behavior: "smooth",
+                block: "start",
+            });
+        }, 100);
+    };
+
     const handleAnalyze = async (selectedCompany) => {
 
         setLoading(true);
         setAnalysis(null);
+        scrollToResults();
 
         try {
 
@@ -198,9 +210,11 @@ const SearchBar = () => {
 
             )}
 
-            <AgentSteps active={loading} />
-
-            <AnalysisCard analysis={analysis} />
+            {/* Anchor point: scrolled into view as soon as a company is clicked */}
+            <div ref={resultsRef} className="scroll-mt-8">
+                <AgentSteps active={loading} />
+                <AnalysisCard analysis={analysis} />
+            </div>
 
         </div>
 
