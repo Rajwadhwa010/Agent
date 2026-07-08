@@ -12,7 +12,7 @@ const AnalysisCard = ({ analysis }) => {
         <div className="mt-10 bg-white border border-[#E5E8EC] rounded-3xl p-8 md:p-10 shadow-sm fade-in-up">
 
             {/* Company Information + Verdict */}
-            <div className="flex flex-wrap items-start justify-between gap-4">
+            <div className="flex flex-wrap items-center justify-between gap-4">
 
                 <div>
                     <h2 className="font-['Newsreader',_serif] text-4xl font-semibold text-[#10151C]">
@@ -29,7 +29,7 @@ const AnalysisCard = ({ analysis }) => {
             </div>
 
             {/* Score Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 items-stretch">
 
                 <ScoreCard
                     title="Investment Score"
