@@ -98,9 +98,9 @@ const SearchBar = () => {
 
     return (
 
-        <div className="w-full max-w-3xl mx-auto">
+        <div className="w-full">
 
-            <div className="relative">
+            <div className="relative max-w-3xl">
 
                 <SearchIcon
                     size={20}
@@ -137,7 +137,7 @@ const SearchBar = () => {
 
             {companies.length > 0 && (
 
-                <div className="mt-2 bg-white border border-[#E5E8EC] rounded-2xl overflow-hidden shadow-lg">
+                <div className="mt-2 max-w-3xl bg-white border border-[#E5E8EC] rounded-2xl overflow-hidden shadow-lg">
 
                     {companies.map((item, index) => (
 
@@ -178,7 +178,7 @@ const SearchBar = () => {
 
             {showEmptyState && (
 
-                <div className="mt-6 flex flex-wrap items-center gap-2">
+                <div className="mt-6 max-w-3xl flex flex-wrap items-center gap-2">
 
                     <span className="text-xs text-[#8A93A2] mr-1">
                         Try:
