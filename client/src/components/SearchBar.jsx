@@ -1,7 +1,15 @@
 import { useState, useRef } from "react";
-import { Search as SearchIcon, Loader2 } from "lucide-react";
+import { Search as SearchIcon } from "lucide-react";
 import api from "../services/api";
 import AnalysisCard from "./AnalysisCard";
+import Loading from "./Loading";
+
+const EXAMPLE_COMPANIES = [
+    { description: "Apple Inc", symbol: "AAPL" },
+    { description: "Tesla Inc", symbol: "TSLA" },
+    { description: "Microsoft Corp", symbol: "MSFT" },
+    { description: "NVIDIA Corp", symbol: "NVDA" },
+];
 
 const SearchBar = () => {
 
@@ -41,13 +49,14 @@ const SearchBar = () => {
 
             }
 
-        }, 400); // waits 400ms after typing stops before calling the API
+        }, 400);
 
     };
 
     const handleAnalyze = async (selectedCompany) => {
 
         setLoading(true);
+        setAnalysis(null);
 
         try {
 
@@ -72,6 +81,8 @@ const SearchBar = () => {
         }
 
     };
+
+    const showEmptyState = !loading && !analysis && companies.length === 0;
 
     return (
 
@@ -114,17 +125,7 @@ const SearchBar = () => {
 
             {companies.length > 0 && (
 
-                <div
-                    className="
-                        mt-2
-                        bg-white
-                        border
-                        border-[#E5E8EC]
-                        rounded-2xl
-                        overflow-hidden
-                        shadow-lg
-                    "
-                >
+                <div className="mt-2 bg-white border border-[#E5E8EC] rounded-2xl overflow-hidden shadow-lg">
 
                     {companies.map((item, index) => (
 
@@ -163,14 +164,42 @@ const SearchBar = () => {
 
             )}
 
-            {loading && (
+            {/* Empty state: quick example chips to try instantly */}
+            {showEmptyState && (
 
-                <div className="mt-8 flex items-center justify-center gap-3 text-[#3654F0] text-base font-medium">
-                    <Loader2 size={20} className="animate-spin" />
-                    AI is analyzing the company...
+                <div className="mt-6 flex flex-wrap items-center gap-2">
+
+                    <span className="text-xs text-[#8A93A2] mr-1">
+                        Try:
+                    </span>
+
+                    {EXAMPLE_COMPANIES.map((item) => (
+                        <button
+                            key={item.symbol}
+                            onClick={() => handleAnalyze(item)}
+                            className="
+                                text-sm
+                                font-medium
+                                text-[#3654F0]
+                                bg-[#3654F0]/5
+                                border
+                                border-[#3654F0]/15
+                                rounded-full
+                                px-4
+                                py-1.5
+                                hover:bg-[#3654F0]/10
+                                transition
+                            "
+                        >
+                            {item.description}
+                        </button>
+                    ))}
+
                 </div>
 
             )}
+
+            {loading && <Loading />}
 
             <AnalysisCard analysis={analysis} />
 
