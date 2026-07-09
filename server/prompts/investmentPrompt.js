@@ -67,7 +67,13 @@ RETURN ONLY VALID JSON
   "strengths": [],
   "weaknesses": [],
   "opportunities": [],
-  "threats": []
+  "threats": [],
+  "keyFinancials": {
+    "revenuePerShare": "",
+    "peRatio": "",
+    "roe": "",
+    "debtToEquity": ""
+  }
 }
 
 Rules:
@@ -79,4 +85,9 @@ Rules:
 - investmentScore must be between 0 and 100.
 - riskScore must be between 0 and 100.
 - confidence must be between 0 and 100.
+- For keyFinancials: extract these values ONLY from the Financial Metrics
+  data provided above. Format each as a short human-readable string
+  (e.g. "28.1", "146.7%"). If a value is not present in the provided
+  data, return "N/A" for that field. Do NOT estimate, calculate from
+  unrelated figures, or invent any value.
 `;

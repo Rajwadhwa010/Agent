@@ -2,6 +2,7 @@ import { TrendingUp, TrendingDown, Rocket, ShieldAlert } from "lucide-react";
 import ScoreCard from "./ScoreCard";
 import SWOTCard from "./SWOTCard";
 import CompanyHeader from "./CompanyHeader";
+import FinancialSummary from "./FinancialSummary";
 import NewsCard from "./NewsCard";
 
 const AnalysisCard = ({ analysis }) => {
@@ -36,6 +37,9 @@ const AnalysisCard = ({ analysis }) => {
                 />
 
             </div>
+
+            {/* Key Financials */}
+            <FinancialSummary keyFinancials={analysis.keyFinancials} />
 
             {/* Recommendation Reason */}
             <div className="mt-10 pl-6 border-l-4 border-[#3654F0]">
