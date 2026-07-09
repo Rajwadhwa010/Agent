@@ -20,6 +20,7 @@ const AnalysisCard = ({ analysis }) => {
                     title="Investment Score"
                     value={`${analysis.investmentScore}/100`}
                     color="#3654F0"
+                    showBadge
                 />
 
                 <ScoreCard
