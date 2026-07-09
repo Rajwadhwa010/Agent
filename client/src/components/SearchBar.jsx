@@ -3,6 +3,7 @@ import { Search as SearchIcon, ArrowRight } from "lucide-react";
 import api from "../services/api";
 import AnalysisCard from "./AnalysisCard";
 import AgentSteps from "./AgentSteps";
+import HowItWorks from "./HowItWorks";
 
 const EXAMPLE_COMPANIES = [
     { description: "Apple Inc", symbol: "AAPL" },
@@ -283,6 +284,8 @@ const SearchBar = () => {
                 </div>
 
             )}
+
+            {showEmptyState && <HowItWorks />}
 
             <div ref={resultsRef} className="scroll-mt-8">
                 <AgentSteps active={loading} />
