@@ -1,7 +1,7 @@
 import { TrendingUp, TrendingDown, Rocket, ShieldAlert } from "lucide-react";
 import ScoreCard from "./ScoreCard";
 import SWOTCard from "./SWOTCard";
-import VerdictStamp from "./VerdictStamp";
+import CompanyHeader from "./CompanyHeader";
 import NewsCard from "./NewsCard";
 
 const AnalysisCard = ({ analysis }) => {
@@ -11,22 +11,7 @@ const AnalysisCard = ({ analysis }) => {
     return (
         <div className="mt-10 bg-white border border-[#E5E8EC] rounded-3xl p-8 md:p-10 shadow-sm fade-in-up">
 
-            {/* Company Information + Verdict */}
-            <div className="flex flex-wrap items-center justify-between gap-4">
-
-                <div>
-                    <h2 className="font-['Newsreader',_serif] text-4xl font-semibold text-[#10151C]">
-                        {analysis.company}
-                    </h2>
-
-                    <p className="text-[#8A93A2] mt-2 text-sm uppercase tracking-wider font-semibold">
-                        {analysis.industry}
-                    </p>
-                </div>
-
-                <VerdictStamp verdict={analysis.recommendation} />
-
-            </div>
+            <CompanyHeader analysis={analysis} />
 
             {/* Score Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 items-stretch">
