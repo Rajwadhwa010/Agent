@@ -8,7 +8,7 @@ const getScoreBadge = (score) => {
     return { label: "Pass", color: "#E53E3E" };
 };
 
-const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false, tooltip = null }) => {
+const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false, tooltip = null, noData = false }) => {
 
     const [showTooltip, setShowTooltip] = useState(false);
 
@@ -17,8 +17,12 @@ const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false, tooltip
     const score = hasScore ? parseInt(match[1], 10) : null;
     const max = hasScore ? parseInt(match[2], 10) : 100;
 
-    const isEmpty = hasScore && score === 0;
-    const pct = hasScore ? Math.min(100, (score / max) * 100) : 0;
+    // Treat as "no data" if this specific score is 0, OR if the caller has
+    // determined overall data was insufficient (e.g. via confidence === 0).
+    // This keeps all score cards consistent even when the AI doesn't zero
+    // out every field the same way.
+    const isEmpty = noData || (hasScore && score === 0);
+    const pct = hasScore && !isEmpty ? Math.min(100, (score / max) * 100) : 0;
 
     const radius = 46;
     const circumference = 2 * Math.PI * radius;

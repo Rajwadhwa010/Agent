@@ -10,6 +10,14 @@ const AnalysisCard = ({ analysis }) => {
 
     if (!analysis) return null;
 
+    // The AI doesn't always zero out every score field the same way when
+    // it had no real data to work with (e.g. investmentScore might come
+    // back as a stray non-zero number while confidence correctly drops to
+    // 0). Confidence === 0 is the most reliable signal we've seen for
+    // "insufficient data", so we use it to keep all three score cards
+    // consistent instead of trusting each field independently.
+    const hasInsufficientData = analysis.confidence === 0;
+
     return (
         <div className="mt-10 bg-white border border-[#E5E8EC] rounded-3xl p-8 md:p-10 shadow-sm fade-in-up">
 
@@ -23,12 +31,14 @@ const AnalysisCard = ({ analysis }) => {
                     value={`${analysis.investmentScore}/100`}
                     color="#3654F0"
                     showBadge
+                    noData={hasInsufficientData}
                 />
 
                 <ScoreCard
                     title="Risk Score"
                     value={`${analysis.riskScore}/100`}
                     color="#DB8A1B"
+                    noData={hasInsufficientData}
                 />
 
                 <ScoreCard
@@ -36,6 +46,7 @@ const AnalysisCard = ({ analysis }) => {
                     value={`${analysis.confidence}/100`}
                     color="#0E9F6E"
                     tooltip="Based on the completeness and quality of available financial statements, market data, and recent news for this company."
+                    noData={hasInsufficientData}
                 />
 
             </div>
