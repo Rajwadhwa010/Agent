@@ -34,7 +34,7 @@ const FinancialSummary = ({ keyFinancials }) => {
                     return (
                         <div
                             key={key}
-                            className="bg-white border border-[#E5E8EC] rounded-2xl p-5 shadow-sm"
+                            className="bg-white border border-[#E5E8EC] rounded-2xl p-5 shadow-sm hover-lift"
                         >
                             <div className="flex items-center gap-2 mb-3">
                                 <Icon size={15} className="text-[#8A93A2]" />

@@ -1,3 +1,6 @@
+import { useState } from "react";
+import { Info } from "lucide-react";
+
 const getScoreBadge = (score) => {
     if (score >= 80) return { label: "Strong Buy", color: "#0E9F6E" };
     if (score >= 60) return { label: "Buy", color: "#3654F0" };
@@ -5,7 +8,9 @@ const getScoreBadge = (score) => {
     return { label: "Pass", color: "#E53E3E" };
 };
 
-const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false }) => {
+const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false, tooltip = null }) => {
+
+    const [showTooltip, setShowTooltip] = useState(false);
 
     const match = String(value).match(/(\d+)\s*\/\s*(\d+)/);
     const hasScore = Boolean(match);
@@ -23,7 +28,7 @@ const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false }) => {
 
     return (
         <div
-            className="bg-white border border-[#E5E8EC] rounded-2xl p-6 flex items-center gap-6 shadow-sm h-full"
+            className="relative bg-white border border-[#E5E8EC] rounded-2xl p-6 flex items-center gap-6 shadow-sm h-full hover-lift"
             style={{ borderTop: `3px solid ${isEmpty ? "#D0D5DD" : color}` }}
         >
 
@@ -67,9 +72,33 @@ const ScoreCard = ({ title, value, color = "#3654F0", showBadge = false }) => {
             )}
 
             <div>
-                <p className="text-[#8A93A2] text-xs uppercase tracking-wider font-semibold leading-tight">
-                    {title}
-                </p>
+                <div className="flex items-center gap-1.5">
+                    <p className="text-[#8A93A2] text-xs uppercase tracking-wider font-semibold leading-tight">
+                        {title}
+                    </p>
+
+                    {tooltip && (
+                        <span
+                            className="relative inline-flex"
+                            onMouseEnter={() => setShowTooltip(true)}
+                            onMouseLeave={() => setShowTooltip(false)}
+                        >
+                            <Info size={13} className="text-[#C5CAD3] cursor-help" />
+
+                            {showTooltip && (
+                                <div
+                                    className="
+                                        absolute bottom-full left-1/2 -translate-x-1/2 mb-2
+                                        w-56 bg-[#10151C] text-white text-xs leading-relaxed
+                                        rounded-lg px-3 py-2.5 shadow-lg z-20 fade-in-up
+                                    "
+                                >
+                                    {tooltip}
+                                </div>
+                            )}
+                        </span>
+                    )}
+                </div>
 
                 {isEmpty ? (
                     <p className="text-[#8A93A2] text-sm mt-2">No data available</p>

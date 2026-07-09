@@ -2,7 +2,7 @@ const SWOTCard = ({ title, items = [], icon: Icon, accent = "#3654F0" }) => {
 
     return (
         <div
-            className="bg-white border border-[#E5E8EC] rounded-2xl p-6 shadow-sm"
+            className="bg-white border border-[#E5E8EC] rounded-2xl p-6 shadow-sm hover-lift"
             style={{ borderTop: `3px solid ${accent}` }}
         >
 

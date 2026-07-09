@@ -4,6 +4,7 @@ import SWOTCard from "./SWOTCard";
 import CompanyHeader from "./CompanyHeader";
 import FinancialSummary from "./FinancialSummary";
 import NewsCard from "./NewsCard";
+import FinalVerdict from "./FinalVerdict";
 
 const AnalysisCard = ({ analysis }) => {
 
@@ -34,6 +35,7 @@ const AnalysisCard = ({ analysis }) => {
                     title="AI Confidence"
                     value={`${analysis.confidence}/100`}
                     color="#0E9F6E"
+                    tooltip="Based on the completeness and quality of available financial statements, market data, and recent news for this company."
                 />
 
             </div>
@@ -94,6 +96,9 @@ const AnalysisCard = ({ analysis }) => {
 
             {/* News */}
             <NewsCard news={analysis.news} />
+
+            {/* Final Verdict Summary */}
+            <FinalVerdict analysis={analysis} />
 
         </div>
     );
