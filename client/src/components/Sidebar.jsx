@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Star, Clock, Settings } from "lucide-react";
+import { Search, Star, Clock, Settings, TrendingUp } from "lucide-react";
 
 const navItems = [
     { label: "Research", icon: Search, active: true },
@@ -30,16 +30,14 @@ const Sidebar = () => {
     return (
         <aside className="hidden md:flex flex-col w-60 shrink-0 bg-white border-r border-[#E5E8EC] min-h-screen px-5 py-8">
 
-            <div className="flex items-center gap-2 px-2 mb-10">
+            <div className="flex items-center gap-2.5 px-2 mb-10">
 
-                <div className="w-8 h-8 rounded-lg bg-[#3654F0] flex items-center justify-center">
-                    <span className="text-white font-['IBM_Plex_Mono',_monospace] text-sm font-bold">
-                        A
-                    </span>
+                <div className="w-8 h-8 rounded-lg bg-[#3654F0] flex items-center justify-center shrink-0">
+                    <TrendingUp size={16} className="text-white" strokeWidth={2.5} />
                 </div>
 
-                <span className="font-['Newsreader',_serif] text-lg font-semibold text-[#10151C]">
-                    Alpha Research
+                <span className="font-['Newsreader',_serif] text-base font-semibold text-[#10151C] leading-tight">
+                    AI Investment<br />Research
                 </span>
 
             </div>
