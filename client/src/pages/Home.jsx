@@ -3,7 +3,7 @@ import api from "../services/api";
 import Sidebar from "../components/Sidebar";
 import SearchBar from "../components/SearchBar";
 import HeroPreview from "../components/HeroPreview";
-import FAQPanel from "../components/FAQPanel";
+import PopularCompaniesPanel from "../components/PopularCompaniesPanel";
 import AgentSteps from "../components/AgentSteps";
 import AnalysisCard from "../components/AnalysisCard";
 import HowItWorks from "../components/HowItWorks";
@@ -140,9 +140,11 @@ const Home = () => {
                             {/* Right column: one connected panel (sample report + features)
                                 fills the space next to the narrower content column */}
                             {showEmptyState && (
-                                <div className="hidden lg:flex flex-col gap-6 sticky top-12">
+                                <div className="hidden lg:flex flex-col sticky top-12">
                                     <HeroPreview />
-                                    <FAQPanel />
+                                    <div className="mt-15">
+                                        <PopularCompaniesPanel onSelect={handleAnalyzeCompany} />
+                                    </div>
                                 </div>
                             )}
 
