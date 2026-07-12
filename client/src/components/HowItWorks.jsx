@@ -24,7 +24,7 @@ const STEPS = [
 const HowItWorks = () => {
 
     return (
-        <div className="mt-12 max-w-5xl">
+        <div className="mt-12 max-w-3xl">
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
 
@@ -60,6 +60,8 @@ const HowItWorks = () => {
                 ))}
 
             </div>
+
+            
 
         </div>
     );

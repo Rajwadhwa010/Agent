@@ -28,7 +28,7 @@ const Sidebar = () => {
     const [hovered, setHovered] = useState(null);
 
     return (
-        <aside className="hidden md:flex flex-col w-60 shrink-0 bg-white border-r border-[#E5E8EC] h-screen sticky top-0 px-5 py-8 overflow-y-auto">
+        <aside className="hidden md:flex flex-col w-60 shrink-0 bg-white border-r border-[#E5E8EC] h-screen sticky top-0 overflow-y-auto px-5 py-8">
 
             <div className="flex items-center gap-2.5 px-2 mb-10">
 

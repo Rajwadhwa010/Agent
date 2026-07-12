@@ -3,7 +3,6 @@ import api from "../services/api";
 import Sidebar from "../components/Sidebar";
 import SearchBar from "../components/SearchBar";
 import HeroPreview from "../components/HeroPreview";
-import PopularCompaniesPanel from "../components/PopularCompaniesPanel";
 import AgentSteps from "../components/AgentSteps";
 import AnalysisCard from "../components/AnalysisCard";
 import HowItWorks from "../components/HowItWorks";
@@ -100,7 +99,6 @@ const Home = () => {
 
                         <div className={`grid gap-12 items-start ${showEmptyState ? "lg:grid-cols-[1fr_320px]" : "grid-cols-1"}`}>
 
-                            {/* Left column: everything but the side panel */}
                             <div>
 
                                 <div className="max-w-2xl">
@@ -137,14 +135,9 @@ const Home = () => {
 
                             </div>
 
-                            {/* Right column: one connected panel (sample report + features)
-                                fills the space next to the narrower content column */}
                             {showEmptyState && (
-                                <div className="hidden lg:flex flex-col sticky top-12">
+                                <div className="hidden lg:block">
                                     <HeroPreview />
-                                    <div className="mt-20">
-                                        <PopularCompaniesPanel onSelect={handleAnalyzeCompany} />
-                                    </div>
                                 </div>
                             )}
 
