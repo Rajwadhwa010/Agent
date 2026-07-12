@@ -11,8 +11,8 @@ supporting evidence.
 Search for any public company by name or ticker. The agent:
 
 1. Looks up the company and resolves it to a stock symbol
-2. Pulls real financial data — company profile, live quote, financial metrics, and recent
-   news — from Finnhub
+2. Pulls real financial data - company profile, live quote, financial metrics, and recent
+   news - from Finnhub
 3. Passes that research to Gemini (via a LangGraph pipeline) to analyze the company like a
    professional investment analyst
 4. Returns a structured verdict: recommendation (INVEST/PASS), investment score, risk score,
@@ -28,8 +28,8 @@ AI chat dashboard.
 
 ### Prerequisites
 - Node.js 18+
-- A Finnhub API key (free tier) — https://finnhub.io
-- A Google Gemini API key (free tier) — https://aistudio.google.com
+- A Finnhub API key (free tier) - https://finnhub.io
+- A Google Gemini API key (free tier) - https://aistudio.google.com
 
 ### Backend
 ```bash
@@ -95,7 +95,7 @@ React UI renders the research report
 ```
 
 **Backend stack:** Node.js, Express, LangChain.js (ChatGoogleGenerativeAI), LangGraph.js
-(StateGraph), Finnhub REST API, Google Gemini (gemini-2.5-flash).
+(StateGraph), Finnhub REST API, Google Gemini (gemini-flash-latest).
 
 **Frontend stack:** React (Vite), Tailwind CSS, lucide-react icons, Axios.
 
@@ -124,14 +124,21 @@ real node flow.
 
 ### UI structure
 
-- **Landing page**: hero headline, search bar (with debounce, Enter-to-search, and example
-  company chips), a "How It Works" 3-step explainer, and a static "Sample AI Report" preview
-  card (clearly labeled as an example, not live data) - all shown only before a real search.
-- **Report view (same page)**: once a company is analyzed, the landing content is replaced
-  by the full-width research report - company header, three score gauges, key financials,
-  analyst note, SWOT grid, recent news, and a closing verdict summary.
+- **Layout**: a sidebar (navigation + a "Guest / Not signed in" placeholder row, since no
+  auth is implemented) stays pinned in view via CSS `position: sticky` as the page scrolls
+  naturally - a single native scrollbar, no separate scrolling containers.
+- **Landing state**: hero headline and search bar (debounced, with Enter-to-search and
+  example company chips) sit beside a static "Sample AI Report" preview card (clearly
+  labeled as an example, not live data), followed by a "How It Works" 3-step explainer.
+- **Report state**: once a company is analyzed, the landing-only content (How It Works,
+  preview card) is hidden and the full-width research report takes over - company header,
+  three score gauges, key financials, analyst note, SWOT grid, recent news, and a closing
+  verdict summary.
 - A live "agent pipeline" tracker (AgentSteps) shows the research stages progressing while
   the request is in flight.
+- A closing footer signature ("Generated using Gemini 2.5 and real-time data from Finnhub,
+  orchestrated through a LangGraph pipeline...") reads like the sign-off of a real analyst
+  report.
 
 ---
 
@@ -148,11 +155,21 @@ real node flow.
   accounts I chose not to build. A quiet "Guest / Not signed in" row anchors the sidebar
   without implying a real account system exists.
 
+- **Sticky sidebar, single native scroll.** I initially tried a fully fixed app-shell layout
+  (separate scroll container for the main content, similar to some chat apps), but it
+  introduced its own visible scrollbar track and added complexity without a clear benefit.
+  Settled on a simpler `position: sticky` sidebar instead - it stays in view as you scroll,
+  using the page's single natural scrollbar, with far less layout complexity.
+
+- **Considered and removed a "trending companies" widget.** I initially built a "Popular
+  Companies" panel showing live quotes for a small fixed set of companies (explicitly not
+  labeled "Trending," since Finnhub's free tier has no real trending/momentum signal or
+  index data). I ultimately removed it to keep the codebase smaller and easier for me to
+  fully explain - a deliberate simplicity trade-off, not a technical failure.
+
 - **Single-page app, no client-side routing.** react-router-dom is installed but unused.
-  Rather than add a /report/:symbol route this late (real work: direct-navigation
-  re-fetching, new loading states, more surface area for bugs), the report renders in place
-  on the same page, expanding to full width once a result loads. Noted as a future
-  improvement for shareable report URLs.
+  Rather than add a /report/:symbol route this late, the report renders in place on the
+  same page. Noted as a future improvement for shareable report URLs.
 
 - **Finnhub's free tier only reliably covers US-listed equities.** Companies listed on other
   exchanges (e.g. Tata Consultancy Services on NSE, Royal Bank of Canada on TSX) often
@@ -187,11 +204,20 @@ real node flow.
   restructuring the backend to use LangGraph's .stream() with server-sent events. Noted as a
   future improvement.
 
-- **Iterated toward simplicity on the landing page's secondary content.** I tried several
-  ideas for the space beside the hero search (a market-news feed, a score-band legend, a
-  recent-searches panel, a feature checklist, an FAQ) and ultimately removed all of them in
-  favor of just a single "Sample AI Report" preview card. Less, well-designed content read
-  better than more content competing for attention - a real design call, not an oversight.
+- **Iterated toward simplicity on the landing page.** I tried several ideas for extra
+  landing-page content (a market-news feed, a score-band legend, a recent-searches panel, a
+  feature checklist, an FAQ, live company quotes) and ultimately kept only the single
+  "Sample AI Report" preview card. Less, well-designed, honest content - and a smaller
+  codebase I can fully explain - mattered more than adding every possible feature.
+
+- **Uses `gemini-flash-latest` instead of a pinned model version.** Mid-development, calls
+  to `gemini-2.5-flash` started returning a 404 ("no longer available to new users") - a
+  real, live restriction Google rolled out on their end, not a bug in this code. The root
+  cause was actually hidden at first: `investmentController.js`'s catch block wasn't logging
+  the underlying error before returning a generic 500, so the real Gemini error message
+  never appeared anywhere. Adding `console.error` there surfaced it immediately. Switched to
+  the `gemini-flash-latest` alias, which Google auto-updates to their current fast model, to
+  avoid the same failure mode if the next pinned version is deprecated too.
 
 - **No fake monetization UI.** An early draft included a decorative "Upgrade to Enterprise"
   sidebar card with no real feature behind it; I removed it, since a non-functional CTA in a
@@ -239,8 +265,8 @@ real node flow.
   etc.) as a structured breakdown, rather than one analyst-note paragraph
 - **A client-side relevance filter** on search results to reduce occasional loosely-related
   matches from Finnhub's search endpoint
-- **A live market-data widget** on the landing page (real quotes, not just a static sample
-  report) - considered during development but deferred to keep scope tight
+- **A live company-quotes widget**, revisited with more time, if it can be built and tested
+  thoroughly rather than kept minimal for this submission
 - **A friendlier UI message for Gemini quota/rate-limit errors** (currently surfaces as a
   generic failure) during heavy testing
 
@@ -254,7 +280,7 @@ score-consistency fix described above). The full chat transcript is included per
 assignment's bonus criteria and reflects the actual iterative process - including real
 mistakes made and caught along the way (files pasted into the wrong location causing syntax
 errors, a duplicate-React version conflict from installing lucide-react, Gemini quota errors
-during heavy testing, and multiple rounds of UI experimentation that were ultimately
-reverted in favor of simpler designs). I can walk through and explain every part of this
-codebase - the LangGraph graph structure, the Finnhub/Gemini integration, and each frontend
-component - in an interview setting.
+during heavy testing, and multiple rounds of UI experimentation - including features I built
+and then deliberately removed to keep the codebase something I can fully explain). I can
+walk through and explain every part of this codebase - the LangGraph graph structure, the
+Finnhub/Gemini integration, and each frontend component - in an interview setting.

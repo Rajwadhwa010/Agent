@@ -11,6 +11,8 @@ export const analyzeCompany = async (req, res) => {
 
     } catch (error) {
 
+        console.error("Analyze Company Error:", error);
+
         return errorResponse(
             res,
             error.message,

@@ -16,7 +16,7 @@ app.use(express.json());
 app.use("/api", investmentRoutes);
 
 app.get("/", (req, res) => {
-    res.send("AI Investment Research Agent API is Running 🚀");
+    res.send("AI Investment Research Agent API is Running");
 });
 
 // Error middleware should be LAST
