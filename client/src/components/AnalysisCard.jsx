@@ -10,12 +10,6 @@ const AnalysisCard = ({ analysis }) => {
 
     if (!analysis) return null;
 
-    // The AI doesn't always zero out every score field the same way when
-    // it had no real data to work with (e.g. investmentScore might come
-    // back as a stray non-zero number while confidence correctly drops to
-    // 0). Confidence === 0 is the most reliable signal we've seen for
-    // "insufficient data", so we use it to keep all three score cards
-    // consistent instead of trusting each field independently.
     const hasInsufficientData = analysis.confidence === 0;
 
     return (
