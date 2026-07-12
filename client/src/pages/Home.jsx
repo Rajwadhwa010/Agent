@@ -105,14 +105,14 @@ const Home = () => {
 
                                 <div className="max-w-2xl">
 
-                                    <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider bg-[#3654F0]/10 text-[#3654F0] px-3 py-1.5 rounded-full mb-5">
+                                    <span className="inline-flex items-center gap-2 text-xs font-['IBM_Plex_Mono',_monospace] uppercase tracking-widest text-[#8A93A2] border border-dashed border-[#C5CAD3] rounded-lg px-3 py-1.5 mb-5">
                                         <span className="w-1.5 h-1.5 rounded-full bg-[#3654F0]" />
                                         AI-Powered Research
                                     </span>
 
-                                    <h1 className="font-sans text-5xl md:text-6xl font-extrabold tracking-tight text-[#10151C] leading-[1.1]">
+                                    <h1 className="font-['Newsreader',_serif] text-5xl md:text-6xl font-semibold tracking-tight text-[#10151C] leading-[1.1]">
                                         AI Investment{" "}
-                                        <span className="bg-gradient-to-r from-[#3654F0] to-[#7C3AED] bg-clip-text text-transparent">
+                                        <span className="text-[#3654F0]">
                                             Research
                                         </span>
                                     </h1>
@@ -142,7 +142,7 @@ const Home = () => {
                             {showEmptyState && (
                                 <div className="hidden lg:flex flex-col sticky top-12">
                                     <HeroPreview />
-                                    <div className="mt-15">
+                                    <div className="mt-20">
                                         <PopularCompaniesPanel onSelect={handleAnalyzeCompany} />
                                     </div>
                                 </div>
