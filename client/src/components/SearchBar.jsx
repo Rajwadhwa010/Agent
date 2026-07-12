@@ -1,9 +1,6 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Search as SearchIcon, ArrowRight } from "lucide-react";
 import api from "../services/api";
-import AnalysisCard from "./AnalysisCard";
-import AgentSteps from "./AgentSteps";
-import HowItWorks from "./HowItWorks";
 
 const EXAMPLE_COMPANIES = [
     { description: "Apple Inc", symbol: "AAPL" },
@@ -12,45 +9,12 @@ const EXAMPLE_COMPANIES = [
     { description: "NVIDIA Corp", symbol: "NVDA" },
 ];
 
-const RECENT_KEY = "alpha_research_recent_searches";
-const MAX_RECENT = 5;
-
-const getRecentSearches = () => {
-    try {
-        const raw = localStorage.getItem(RECENT_KEY);
-        return raw ? JSON.parse(raw) : [];
-    } catch {
-        return [];
-    }
-};
-
-const saveRecentSearch = (item) => {
-    try {
-        const existing = getRecentSearches().filter(
-            (r) => r.symbol !== item.symbol
-        );
-        const updated = [item, ...existing].slice(0, MAX_RECENT);
-        localStorage.setItem(RECENT_KEY, JSON.stringify(updated));
-        return updated;
-    } catch {
-        return getRecentSearches();
-    }
-};
-
-const SearchBar = () => {
+const SearchBar = ({ onSelectCompany }) => {
 
     const [company, setCompany] = useState("");
     const [companies, setCompanies] = useState([]);
-    const [analysis, setAnalysis] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [recentSearches, setRecentSearches] = useState([]);
 
     const debounceRef = useRef(null);
-    const resultsRef = useRef(null);
-
-    useEffect(() => {
-        setRecentSearches(getRecentSearches());
-    }, []);
 
     const handleSearch = (value) => {
 
@@ -85,50 +49,15 @@ const SearchBar = () => {
 
     };
 
-    const scrollToResults = () => {
-        setTimeout(() => {
-            resultsRef.current?.scrollIntoView({
-                behavior: "smooth",
-                block: "start",
-            });
-        }, 100);
+    const handleSelect = (item) => {
+        setCompany(item.description);
+        setCompanies([]);
+        onSelectCompany(item);
     };
 
-    const handleAnalyze = async (selectedCompany) => {
-
-        setLoading(true);
-        setAnalysis(null);
-        scrollToResults();
-
-        try {
-
-            const response = await api.post("/analyze", {
-                company: selectedCompany.description,
-                symbol: selectedCompany.symbol,
-            });
-
-            setAnalysis(response.data.data);
-
-            setCompany(selectedCompany.description);
-            setCompanies([]);
-            setRecentSearches(saveRecentSearch(selectedCompany));
-
-        } catch (error) {
-
-            console.error("Analyze Error:", error);
-
-        } finally {
-
-            setLoading(false);
-
-        }
-
-    };
-
-    // Enter key or the Analyze button both act on the top matching result
     const handleAnalyzeClick = () => {
         if (companies.length > 0) {
-            handleAnalyze(companies[0]);
+            handleSelect(companies[0]);
         }
     };
 
@@ -137,8 +66,6 @@ const SearchBar = () => {
             handleAnalyzeClick();
         }
     };
-
-    const showEmptyState = !loading && !analysis && companies.length === 0;
 
     return (
 
@@ -218,7 +145,7 @@ const SearchBar = () => {
 
                         <div
                             key={`${item.symbol}-${index}`}
-                            onClick={() => handleAnalyze(item)}
+                            onClick={() => handleSelect(item)}
                             className="
                                 px-5
                                 py-4
@@ -251,46 +178,47 @@ const SearchBar = () => {
 
             )}
 
-            {showEmptyState && (
+            {companies.length === 0 && (
 
-                <div className="mt-6 max-w-3xl flex flex-wrap items-center gap-2">
+                <div className="mt-8 max-w-3xl">
 
-                    <span className="text-xs text-[#8A93A2] mr-1">
-                        {recentSearches.length > 0 ? "Recent:" : "Try:"}
-                    </span>
+                    <p className="text-[#8A93A2] text-xs uppercase tracking-wider font-semibold mb-3">
+                        Try These
+                    </p>
 
-                    {(recentSearches.length > 0 ? recentSearches : EXAMPLE_COMPANIES).map((item) => (
-                        <button
-                            key={item.symbol}
-                            onClick={() => handleAnalyze(item)}
-                            className="
-                                text-sm
-                                font-medium
-                                text-[#3654F0]
-                                bg-[#3654F0]/5
-                                border
-                                border-[#3654F0]/15
-                                rounded-full
-                                px-4
-                                py-1.5
-                                hover:bg-[#3654F0]/10
-                                transition
-                            "
-                        >
-                            {item.description}
-                        </button>
-                    ))}
+                    <div className="flex flex-wrap items-center gap-2">
+
+                        {EXAMPLE_COMPANIES.map((item) => (
+                            <button
+                                key={item.symbol}
+                                onClick={() => handleSelect(item)}
+                                className="
+                                    text-sm
+                                    font-medium
+                                    text-[#10151C]
+                                    bg-white
+                                    border
+                                    border-[#E5E8EC]
+                                    rounded-full
+                                    px-4
+                                    py-2
+                                    shadow-sm
+                                    hover:border-[#3654F0]/40
+                                    transition
+                                "
+                            >
+                                {item.description}{" "}
+                                <span className="text-[#8A93A2] font-['IBM_Plex_Mono',_monospace] text-xs">
+                                    ({item.symbol})
+                                </span>
+                            </button>
+                        ))}
+
+                    </div>
 
                 </div>
 
             )}
-
-            {showEmptyState && <HowItWorks />}
-
-            <div ref={resultsRef} className="scroll-mt-8">
-                <AgentSteps active={loading} />
-                <AnalysisCard analysis={analysis} />
-            </div>
 
         </div>
 

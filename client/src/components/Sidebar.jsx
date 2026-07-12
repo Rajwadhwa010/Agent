@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Search, Star, Clock, Settings, TrendingUp } from "lucide-react";
+import { Search, Star, Clock, Settings, TrendingUp, User } from "lucide-react";
 
 const navItems = [
     { label: "Research", icon: Search, active: true },
@@ -28,7 +28,7 @@ const Sidebar = () => {
     const [hovered, setHovered] = useState(null);
 
     return (
-        <aside className="hidden md:flex flex-col w-60 shrink-0 bg-white border-r border-[#E5E8EC] min-h-screen px-5 py-8">
+        <aside className="hidden md:flex flex-col w-60 shrink-0 bg-white border-r border-[#E5E8EC] h-screen sticky top-0 px-5 py-8 overflow-y-auto">
 
             <div className="flex items-center gap-2.5 px-2 mb-10">
 
@@ -94,6 +94,23 @@ const Sidebar = () => {
                 ))}
 
             </nav>
+
+            <div className="mt-auto pt-4 border-t border-[#E5E8EC] flex items-center gap-3 px-3">
+
+                <div className="w-9 h-9 rounded-full bg-[#3654F0]/10 flex items-center justify-center shrink-0">
+                    <User size={16} className="text-[#3654F0]" />
+                </div>
+
+                <div className="min-w-0">
+                    <p className="text-[#10151C] text-sm font-semibold truncate">
+                        Guest
+                    </p>
+                    <p className="text-[#8A93A2] text-xs truncate">
+                        Not signed in
+                    </p>
+                </div>
+
+            </div>
 
         </aside>
     );

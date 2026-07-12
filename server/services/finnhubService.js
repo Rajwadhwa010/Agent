@@ -94,3 +94,5 @@ export const getBasicFinancials = async (symbol) => {
         throw new Error("Unable to fetch financial metrics.");
     }
 };
+
+// Function 5 — general market news, not tied to a specific company
